@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %} Sheep {% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+	<h1>Hello,{% if name %}{{ name }}{% else %} Stranger{% endif %}!</h1>
+</div>
+{% if current_user.is_administrator() %}
+{{ wtf.quick_form(form) }}
+{% endif %}
+{% include '_posts.html' %}
+{% endblock %}
+
+
