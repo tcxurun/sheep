@@ -1,4 +1,5 @@
-from flask.ext.wtf import form
+#encoding: utf-8
+from flask.ext.wtf import Form
 from wtforms import StringField,PasswordField,BooleanField,SubmitField
 from wtforms.validators import Required,Length,Email,Regexp,EqualTo
 from wtforms import ValidationError
@@ -37,5 +38,5 @@ class ChangeEmailForm(Form):
 	submit = SubmitField('更改邮箱地址')
 
 	def validate_email(self,field):
-		if User.query.filter_by(email=field.data).first() is None:
+		if User.query.filter_by(email=field.data).first():
 			raise ValidationError('该邮件地址已存在')

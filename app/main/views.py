@@ -19,7 +19,7 @@ def index():
 
 
 
-main.route('edit/<int:id>',methods=['GET','POST'])
+@main.route('/edit/<int:id>',methods=['GET','POST'])
 @login_required
 def edit(id):
 	post = Post.query.get_or_404(id)

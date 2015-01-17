@@ -21,4 +21,7 @@ def test():
 	unittest.TextTestRunner(verbosity=2).run(tests)
 
 if __name__ == '__main__':
+	import sys
+	reload(sys)
+	sys.setdefaultencoding("utf-8")
 	manager.run()

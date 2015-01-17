@@ -2,6 +2,7 @@
 {% block title %} Sheep {% endblock %}
 {% block head %}
 {{ super() }}
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
 <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
@@ -16,15 +17,31 @@
 			<span class=="icon-bar"></span>
 			<span class=="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="/">Sheep</a>
+			<a class="navbar-brand" href="{{ url_for('main.index') }}">Sheep</a>
 		</div>
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
-				<li><a href="/">Home</a></li>
+				<li><a href="{{ url_for('main.index') }}">Home</a></li>
+				{% if current_user.is_authenticated() %}
+				<li><a href="/">Profile</a></li>
+				{% endif %}
 			</ul>
-
 			 <ul class="nav navbar-nav navbar-right">
-			  <li><a href="/">Log In</a></li>
+			 {% if current_user.is_authenticated() %}
+			 <li class="dropdown">
+			  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <img src="{{ current_user.gravatar(size=18) }}">
+                        Account <b class="caret"></b>
+                    </a>
+			 	<ul class="dropdown-menu">
+			 		<li><a href="{{ url_for('auth.change_password') }}">修改密码</a></li>
+			 		<li><a href="{{ url_for('auth.change_email_request') }}">修改邮箱</a></li>
+			 		<li><a href="{{ url_for('auth.logout') }}">退出</a></li>
+			 	</ul>
+			 </li>
+			 {% else %}
+			  <li><a href="{{ url_for('auth.login') }}">登录</a></li>
+			  {% endif %}
 			  </ul>
         </div>
 		</div>
