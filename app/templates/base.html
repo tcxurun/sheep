@@ -34,6 +34,7 @@
                         Account <b class="caret"></b>
                     </a>
 			 	<ul class="dropdown-menu">
+			 		<li><a href="{{ url_for('main.post') }}">发表文章</a></li>
 			 		<li><a href="{{ url_for('auth.change_password') }}">修改密码</a></li>
 			 		<li><a href="{{ url_for('auth.change_email_request') }}">修改邮箱</a></li>
 			 		<li><a href="{{ url_for('auth.logout') }}">退出</a></li>

@@ -1,3 +1,4 @@
+#encoding: utf-8
 from datetime import datetime
 from flask import current_app,request,url_for
 from flask.ext.login import UserMixin,AnonymousUserMixin
@@ -128,7 +129,7 @@ def load_user(user_id):
 class Post(db.Model):
 	__tablename__ = 'posts'
 	id = db.Column(db.Integer,primary_key=True)
-	titile = db.Column(db.String(128))
+	title = db.Column(db.String(128))
 	body = db.Column(db.Text)
 	body_html = db.Column(db.Text)
 	timestamp = db.Column(db.DateTime,index=True,default=datetime.utcnow)
@@ -144,17 +145,32 @@ class Post(db.Model):
 			except IntegrityError:
 				db.session.rollback()
 
+
 	@staticmethod
 	def on_changed_body(target, value, oldvalue, initiator):
+
+		def filter_src(name,value):
+			if name in ('alt','height','width'):
+				return True
+			if name == 'src':
+				p = urlparse(value)
+				return (not p.netloc) or p.netloc == 'mydomain.com'
+			return False
+
 		allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
-		'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul','h1', 'h2', 'h3', 'p']
+			'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul','h1', 'h2', 'h3', 'p']
+
+		allowed_attributes = {
+			'img':filter_src,
+		}
 		target.body_html = bleach.linkify(bleach.clean(
 			markdown(value, output_format='html'),
-			tags=allowed_tags, strip=True))
+			tags=allowed_tags,attributes=allowed_attributes,strip=True))
 
 	def to_json(self):
 		json_comment = {
 			'url': url_for('api..get_comment',id=self.id,_external=True),
+			'title':self.titile,
 			'post': url_for('api.get.get_post',id=self.post_id,_external=True),
 			'body': self.body,
 			'body_html':self.body_html,
@@ -163,7 +179,12 @@ class Post(db.Model):
 
 	@staticmethod
 	def from_json(json_post):
+		title = json_post.get('title')
 		body = json_post.get('body')
+		if title is None or title == '':
+			raise ValidationError('文章没有标题！')
 		if body is None or body == '':
 			raise ValidationError('post does not have a body')
-		return Post(body=body)
+		return Post(title=title,body=body)
+
+db.event.listen(Post.body,'set',Post.on_changed_body)

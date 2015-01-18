@@ -12,12 +12,20 @@ def index():
 	if form.validate_on_submit():
 		post = Post(body=form.body.data)
 		db.session.add(post)
-		return redirect(url_for('.index()'))
+		return redirect(url_for('.index'))
 	posts = Post.query.order_by(Post.timestamp.desc()).all()
 	return render_template('index.html',form=form,posts=posts)
 
 
-
+@main.route('/post',methods=['GET','POST'])
+@login_required
+def post():
+	form = PostForm()
+	if form.validate_on_submit():
+		post = Post(title=form.title.data,body=form.body.data)
+		db.session.add(post)
+		return redirect(url_for('.index'))
+	return render_template('post.html',form=form)
 
 @main.route('/edit/<int:id>',methods=['GET','POST'])
 @login_required

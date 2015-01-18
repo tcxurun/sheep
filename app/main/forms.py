@@ -1,3 +1,4 @@
+#encoding: utf-8
 from flask.ext.wtf import Form
 from wtforms import StringField, TextAreaField, BooleanField, SelectField,\
     SubmitField
@@ -7,14 +8,15 @@ from flask.ext.pagedown.fields import PageDownField
 from ..models import User
 
 class NameForm(Form):
-    name = StringField('What is your name?', validators=[Required()])
-    submit = SubmitField('Submit')
+    name = StringField('用户名?', validators=[Required()])
+    submit = SubmitField('提交')
     
 class PostForm(Form):
-    body = PageDownField("What's on your mind?", validators=[Required()])
-    submit = SubmitField('Submit')
+	title = StringField('标题',validators=[Required()])
+	body = PageDownField("正文",validators=[Required()])
+	submit = SubmitField('提交')
 
 
 class CommentForm(Form):
-    body = StringField('Enter your comment', validators=[Required()])
-    submit = SubmitField('Submit')
+    body = StringField('内容', validators=[Required()])
+    submit = SubmitField('提交')
