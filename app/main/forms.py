@@ -17,6 +17,8 @@ class PostForm(Form):
 	submit = SubmitField('提交')
 
 
+
 class CommentForm(Form):
-    body = StringField('内容', validators=[Required()])
-    submit = SubmitField('提交')
+	nickname = StringField('昵称',validators=[Required()])
+	body = StringField('内容', validators=[Required()])
+	submit = SubmitField('提交')

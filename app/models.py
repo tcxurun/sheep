@@ -134,6 +134,8 @@ class Post(db.Model):
 	body_html = db.Column(db.Text)
 	timestamp = db.Column(db.DateTime,index=True,default=datetime.utcnow)
 
+	comments = db.relationship('Comment',backref='post',lazy='dynamic')
+
 	@staticmethod
 	def generate_posts(count=10):
 		for i in range(count):
@@ -148,7 +150,7 @@ class Post(db.Model):
 
 	@staticmethod
 	def on_changed_body(target, value, oldvalue, initiator):
-
+		'''
 		def filter_src(name,value):
 			if name in ('alt','height','width'):
 				return True
@@ -158,14 +160,18 @@ class Post(db.Model):
 			return False
 
 		allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
-			'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul','h1', 'h2', 'h3', 'p']
+			'em', 'i', 'li'<p></p>, 'ol', 'pre', 'strong', 'ul','h1', 'h2', 'h3', 'p']
 
 		allowed_attributes = {
-			'img':filter_src,
+			'img':['src']
 		}
+
+		
 		target.body_html = bleach.linkify(bleach.clean(
 			markdown(value, output_format='html'),
 			tags=allowed_tags,attributes=allowed_attributes,strip=True))
+		'''
+		target.body_html = markdown(value, output_format='html')
 
 	def to_json(self):
 		json_comment = {
@@ -187,4 +193,20 @@ class Post(db.Model):
 			raise ValidationError('post does not have a body')
 		return Post(title=title,body=body)
 
+
+
+class Comment(db.Model):
+	__tablename__ = 'comments'
+	id = db.Column(db.Integer,primary_key=True)
+	nickname = db.Column(db.String(30))
+	body=db.Column(db.Text)
+	body_html = db.Column(db.Text)
+	timestamp = db.Column(db.DateTime,index=True,default=datetime.utcnow)
+	disabled = db.Column(db.Boolean)
+	post_id = db.Column(db.Integer,db.ForeignKey('posts.id'))
+	@staticmethod
+	def on_changed_body(target,value,oldvalue,initiator):
+		target.body_html = markdown(value, output_format='html')
+
 db.event.listen(Post.body,'set',Post.on_changed_body)
+db.event.listen(Comment.body,'set',Comment.on_changed_body)
