@@ -17,7 +17,6 @@
 			<span class=="icon-bar"></span>
 			<span class=="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="{{ url_for('main.index') }}">Sheep</a>
 		</div>
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
@@ -35,6 +34,7 @@
                     </a>
 			 	<ul class="dropdown-menu">
 			 		<li><a href="{{ url_for('main.post') }}">发表文章</a></li>
+			 		<li><a href="{{ url_for('main.moderate') }}">管理评论</a></li>
 			 		<li><a href="{{ url_for('auth.change_password') }}">修改密码</a></li>
 			 		<li><a href="{{ url_for('auth.change_email_request') }}">修改邮箱</a></li>
 			 		<li><a href="{{ url_for('auth.logout') }}">退出</a></li>

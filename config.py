@@ -7,6 +7,8 @@ class Config:
 	SHEEP_MAIL_SUBJECT_PREFIX = '[Sheep]'
 	SHEEP_MAIL_SENDER = 'Sheep Admin <tcxurun@163.com>'
 	SHEEP_ADMIN = os.environ.get('SHEEP_ADMIN')
+	SHEEP_POSTS_PER_PAGE = 10
+	SHEEP_COMMENTS_PER_PAGE = 10
 
 	@staticmethod
 	def init_app(app):
