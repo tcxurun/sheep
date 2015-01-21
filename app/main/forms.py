@@ -7,8 +7,8 @@ from wtforms import ValidationError
 from flask.ext.pagedown.fields import PageDownField
 from ..models import User
 
-class NameForm(Form):
-    name = StringField('用户名?', validators=[Required()])
+class EditProfileForm(Form):
+    about_me = StringField('关于我', validators=[Required()])
     submit = SubmitField('提交')
     
 class PostForm(Form):

@@ -18,7 +18,8 @@ class User(UserMixin,db.Model):
 	password = db.Column(db.String(64))
 	password_hash = db.Column(db.String(128))
 	avatar_hash = db.Column(db.String(32))
-
+	about_me = db.Column(db.Text())
+	
 	def __init__(self,**kwargs):
 		super(User,self).__init__(**kwargs)
 		if self.email is not None and self.avatar_hash is None:

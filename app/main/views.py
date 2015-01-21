@@ -4,7 +4,7 @@ from flask import render_template,session,redirect,url_for,request,flash,current
 from flask.ext.login import login_required, current_user
 from . import main
 from .. import db
-from .forms import PostForm,CommentForm
+from .forms import PostForm,CommentForm,EditProfileForm
 from ..models import User,Post,Comment
 
 @main.route('/',methods=['GET','POST'])
@@ -15,6 +15,7 @@ def index():
 		db.session.add(post)
 		return redirect(url_for('.index'))
 	page = request.args.get('page',1,type=int)
+
 	query = Post.query
 	pagination = query.order_by(Post.timestamp.desc()).paginate(
 		page,per_page=current_app.config['SHEEP_POSTS_PER_PAGE'],error_out=False)
@@ -23,17 +24,36 @@ def index():
 
 	return render_template('index.html',form=form,posts=posts,pagination=pagination)
 
+@main.route('/edit-profile',methods=['GET','POST'])
+@login_required
+def edit_profile():
+	form = EditProfileForm()
+	if form.validate_on_submit():
+		current_user.about_me = form.about_me.data
+		db.session.add(current_user)
+		flash('你的介绍已经更新!')
+		return redirect(url_for('.edit_profile',about_me=current_user.about_me))
+	form.about_me.data = current_user.about_me
+	return render_template('edit_profile.html',form=form)
+
+@main.route('/view-profile',methods=['GET','POST'])
+def view_profile():
+	form = EditProfileForm()
+	user = User.query.first()
+	form.about_me.data = user.about_me
+	return render_template('view_profile.html',form=form,user=user)
 
 @main.route('/post',methods=['GET','POST'])
 @login_required
 def post():
-	form = PostForm()
-	if form.validate_on_submit():
+	form = PostForm(request.form)
+	if request.method == 'POST' and form.validate():
 		post = Post(title=form.title.data,body=form.body.data)
 		db.session.add(post)
-		return redirect(url_for('.post'))
-	posts = Post.query.order_by(Post.timestamp.desc()).all()
-	return render_template('post.html',form=form,posts=posts)
+		return redirect(url_for('.index'))
+	form.title.data = ''
+	form.body.data = ''
+	return render_template('post.html',form=form)
 
 @main.route('/edit/<int:id>',methods=['GET','POST'])
 @login_required
@@ -112,3 +132,11 @@ def moderate_disable(id):
 	comment.disabled = True
 	db.session.add(comment)
 	return redirect(url_for('.moderate',page=request.args.get('page',1,type=int)))
+
+@main.route('/archive')
+def archive():
+	page = request.args.get('page',1,type=int)
+	pagination = Post.query.order_by(Post.timestamp.desc()).paginate(
+		page,per_page=current_app.config['SHEEP_ARCHIVE_PER_PAGE'],error_out=False)
+	posts = pagination.items
+	return render_template('archive.html',posts=posts,pagination=pagination,page=page)

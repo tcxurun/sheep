@@ -9,6 +9,7 @@ class Config:
 	SHEEP_ADMIN = os.environ.get('SHEEP_ADMIN')
 	SHEEP_POSTS_PER_PAGE = 10
 	SHEEP_COMMENTS_PER_PAGE = 10
+	SHEEP_ARCHIVE_PER_PAGE = 50
 
 	@staticmethod
 	def init_app(app):

@@ -21,9 +21,8 @@
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
 				<li><a href="{{ url_for('main.index') }}">Home</a></li>
-				{% if current_user.is_authenticated() %}
-				<li><a href="/">Profile</a></li>
-				{% endif %}
+				<li><a href="{{ url_for('main.archive') }}">归档</a></li>
+				<li><a href="{{ url_for('main.view_profile') }}">关于</a></li>
 			</ul>
 			 <ul class="nav navbar-nav navbar-right">
 			 {% if current_user.is_authenticated() %}
@@ -35,8 +34,10 @@
 			 	<ul class="dropdown-menu">
 			 		<li><a href="{{ url_for('main.post') }}">发表文章</a></li>
 			 		<li><a href="{{ url_for('main.moderate') }}">管理评论</a></li>
+			 		<li><a href="{{ url_for('main.edit_profile') }}">编辑介绍</a></li>
 			 		<li><a href="{{ url_for('auth.change_password') }}">修改密码</a></li>
 			 		<li><a href="{{ url_for('auth.change_email_request') }}">修改邮箱</a></li>
+
 			 		<li><a href="{{ url_for('auth.logout') }}">退出</a></li>
 			 	</ul>
 			 </li>
