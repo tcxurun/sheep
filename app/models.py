@@ -19,7 +19,7 @@ class User(UserMixin,db.Model):
 	password_hash = db.Column(db.String(128))
 	avatar_hash = db.Column(db.String(32))
 	about_me = db.Column(db.Text())
-	
+
 	def __init__(self,**kwargs):
 		super(User,self).__init__(**kwargs)
 		if self.email is not None and self.avatar_hash is None:
@@ -126,7 +126,7 @@ login_manager.anonymous_user = AnonymousUser
 def load_user(user_id):
 	return User.query.get(int(user_id))
 
-	
+
 class Post(db.Model):
 	__tablename__ = 'posts'
 	id = db.Column(db.Integer,primary_key=True)
@@ -167,7 +167,7 @@ class Post(db.Model):
 			'img':['src']
 		}
 
-		
+
 		target.body_html = bleach.linkify(bleach.clean(
 			markdown(value, output_format='html'),
 			tags=allowed_tags,attributes=allowed_attributes,strip=True))

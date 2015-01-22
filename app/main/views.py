@@ -27,7 +27,7 @@ def index():
 @main.route('/edit-profile',methods=['GET','POST'])
 @login_required
 def edit_profile():
-	form = EditProfileForm()
+	form = EditProfileForm(request.form)
 	if form.validate_on_submit():
 		current_user.about_me = form.about_me.data
 		db.session.add(current_user)
@@ -47,12 +47,20 @@ def view_profile():
 @login_required
 def post():
 	form = PostForm(request.form)
-	if request.method == 'POST' and form.validate():
+	#if form.validate_on_submit():
+	print 'title: %s' %form.title.data
+	print 'body: %s' % form.body.data
+	print 'post: %s' %request.method
+	print 'validate: %s' %form.validate()
+	print 'validate_on_submit:%s' % form.validate_on_submit()
+	print 'errors:%s' % form.errors
+	if request.method == 'POST' and form.validate_on_submit():
 		post = Post(title=form.title.data,body=form.body.data)
 		db.session.add(post)
 		return redirect(url_for('.index'))
-	form.title.data = ''
-	form.body.data = ''
+	#form.title.data = ''
+	#form.body.data = ''
+	flash('标题和正文为必填项！')
 	return render_template('post.html',form=form)
 
 @main.route('/edit/<int:id>',methods=['GET','POST'])
@@ -140,3 +148,4 @@ def archive():
 		page,per_page=current_app.config['SHEEP_ARCHIVE_PER_PAGE'],error_out=False)
 	posts = pagination.items
 	return render_template('archive.html',posts=posts,pagination=pagination,page=page)
+
