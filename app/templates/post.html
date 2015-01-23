@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{{ pagedown.include_pagedown() }}
+{% block title %}Shellp - 发表文章{% endblock %}
+{% block page_content %}
+<div class='posts'>
+
+ <form action="" method="post" name="post">
+    {{ form.hidden_tag() }}
+     {{ form.csrf_token }}
+        标题：{{ form.title(size=140,class_='required') }}<br/>
+        内容：<textarea id="body" name='body'  class="ckeditor"></textarea>
+        {{ form.submit }}
+    </form>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+{{ pagedown.include_pagedown() }}
+{% endblock %}

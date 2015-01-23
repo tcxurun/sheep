@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}Shellp - 关于{% endblock %}
+{% block page_content %}
+<div class="page-header">
+<textarea id="about_me" name='about_me'  class="ckeditor">
+{{ user.about_me }}
+</textarea>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+{{ pagedown.include_pagedown() }}
+{% endblock %}

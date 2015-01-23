@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Sheep - 修改文章{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+	<h1>修改文章</h1>
+</div>
+<div>
+	<form action="" method="post" name="edit">
+    {{ form.hidden_tag() }}
+     {{ form.csrf_token }}
+        标题：{{ form.title(size=140) }}<br/>
+内容：<textarea id="body" name="body"  class="ckeditor">
+{{ form.body }}
+</textarea>
+{{ form.submit }}
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{{ pagedown.include_pagedown() }}
+{% endblock %}
