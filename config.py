@@ -24,6 +24,16 @@ class DevelopmentConfig(Config):
 	MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
 	SQLALCHEMY_DATABASE_URI = "mysql://root:root@localhost/sheep_dev"
 
+class UnixConfig(DevelopmentConfig):
+	@classmethod
+	def init_app(cls,app):
+		import logging
+		from logging.handlers import SysLogHandler
+		syslog_handler = SysLogHandler()
+		syslog_handler.setLevel(logging.WARNING)
+		app.logger.addHandler(syslog_handler)
+
+
 class TestingConfig(Config):
 	TESTING = True
 	SQLALCHEMY_DATABASE_URI = "mysql://root:root@localhost/sheep_test"
@@ -36,5 +46,5 @@ config = {
 	'testing': TestingConfig,
 	'production': ProductionConfig,
 
-	'default': DevelopmentConfig
+	'default': UnixConfig
 }
